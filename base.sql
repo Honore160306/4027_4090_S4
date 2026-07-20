@@ -41,14 +41,18 @@ CREATE TABLE operations (
 );
 
 CREATE VIEW situation_gains AS
-SELECT 
+SELECT
+    op.nom AS operateur,
     t.nom AS type_operation,
     COUNT(o.id) AS nombre_operations,
-    SUM(o.frais) AS gain_total
+    SUM(o.montant * op.pourcentage / 100.0) AS gain_total
 FROM operations o
 JOIN types_operation t ON t.id = o.type_operation_id
+JOIN clients c ON c.id = o.client_id
+JOIN prefixes p ON SUBSTR(c.numero_telephone, 1, LENGTH(p.prefixe)) = p.prefixe
+JOIN operateurs op ON op.id = p.id_operateur
 WHERE t.nom IN ('retrait', 'transfert')
-GROUP BY t.nom;
+GROUP BY op.id, op.nom, t.nom;
 
 -- TRIGGER
 CREATE TRIGGER trg_operations_after_insert
