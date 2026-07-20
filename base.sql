@@ -1,17 +1,15 @@
 PRAGMA foreign_keys = ON;
 
-
+-- TABLE
 CREATE TABLE prefixes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     prefixe TEXT NOT NULL UNIQUE  
 );
 
-
 CREATE TABLE types_operation (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT NOT NULL UNIQUE  
 );
-
 
 CREATE TABLE baremes_frais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,14 +20,12 @@ CREATE TABLE baremes_frais (
     FOREIGN KEY (type_operation_id) REFERENCES types_operation(id)
 );
 
-
 CREATE TABLE clients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     numero_telephone TEXT NOT NULL UNIQUE,
     solde NUMERIC NOT NULL DEFAULT 0,
     date_creation TEXT DEFAULT CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE operations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,45 +50,83 @@ JOIN types_operation t ON t.id = o.type_operation_id
 WHERE t.nom IN ('retrait', 'transfert')
 GROUP BY t.nom;
 
+-- TRIGGER
+CREATE TRIGGER trg_operations_after_insert
+AFTER INSERT ON operations
+BEGIN
 
+    -- DEPOT
+    UPDATE clients
+    SET solde = solde + NEW.montant
+    WHERE id = NEW.client_id
+      AND NEW.type_operation_id = (
+            SELECT id
+            FROM types_operation
+            WHERE nom = 'depot'
+      );
+
+    -- RETRAIT
+    UPDATE clients
+    SET solde = solde - (NEW.montant + NEW.frais)
+    WHERE id = NEW.client_id
+      AND NEW.type_operation_id = (
+            SELECT id
+            FROM types_operation
+            WHERE nom = 'retrait'
+      );
+
+    -- TRANSFERT : débit expéditeur
+    UPDATE clients
+    SET solde = solde - (NEW.montant + NEW.frais)
+    WHERE id = NEW.client_id
+      AND NEW.type_operation_id = (
+            SELECT id
+            FROM types_operation
+            WHERE nom = 'transfert'
+      );
+
+    -- TRANSFERT : crédit destinataire
+    UPDATE clients
+    SET solde = solde + NEW.montant
+    WHERE id = NEW.client_destinataire_id
+      AND NEW.type_operation_id = (
+            SELECT id
+            FROM types_operation
+            WHERE nom = 'transfert'
+      );
+END;
+
+-- INSERT
 INSERT INTO prefixes (prefixe) VALUES ('033');
 INSERT INTO prefixes (prefixe) VALUES ('034');
-
 
 INSERT INTO types_operation (nom) VALUES ('depot');
 INSERT INTO types_operation (nom) VALUES ('retrait');
 INSERT INTO types_operation (nom) VALUES ('transfert');
-
 
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (2, 0, 5000, 100);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (2, 5001, 20000, 300);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (2, 20001, 50000, 600);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (2, 50001, 200000, 1500);
 
-
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (3, 0, 5000, 50);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (3, 5001, 20000, 200);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (3, 20001, 50000, 500);
 INSERT INTO baremes_frais (type_operation_id, montant_min, montant_max, frais) VALUES (3, 50001, 200000, 1200);
-
 
 INSERT INTO clients (numero_telephone, solde) VALUES ('0331234567', 15000);
 INSERT INTO clients (numero_telephone, solde) VALUES ('0337654321', 42000);
 INSERT INTO clients (numero_telephone, solde) VALUES ('0339876543', 8000);
 INSERT INTO clients (numero_telephone, solde) VALUES ('0371112222', 100000);
 
-
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (1, NULL, 1, 10000, 0);
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (2, NULL, 2, 15000, 300);
-
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (4, NULL, 2, 60000, 1500);
-
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (1, 3, 3, 3000, 50);
-
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (4, 2, 3, 25000, 500);
 

@@ -3,8 +3,6 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-// $routes->get('/', 'Home::index');
-$routes->get('/test', 'Test::index'); 
 
 $routes->get('/', 'AccueilController::accueil');
 
@@ -21,3 +19,15 @@ $routes->group('operateur', function($routes) {
     $routes->get('gains', 'GainController::index');
     $routes->get('clients', 'ClientController::index');
 });
+
+$routes->get('/client/login', 'ClientLoginController::login');
+$routes->post('/client/solde', 'ClientSoldeController::solde');
+
+$routes->get('/client/depot', 'ClientDepotController::depot');
+$routes->get('/client/depot/ajout', 'ClientDepotController::ajout');
+$routes->get('/client/retrait', 'ClientRetraitController::retrait');
+$routes->get('/client/retrait/ajout', 'ClientRetraitController::ajout');
+$routes->get('/client/transfert', 'ClientTransfertController::transfert');
+$routes->get('/client/transfert/ajout', 'ClientTransfertController::ajout');
+
+$routes->get('/client/historique', 'ClientHistoriqueController::historique');
