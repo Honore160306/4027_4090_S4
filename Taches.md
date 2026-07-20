@@ -46,22 +46,41 @@
 
 ### Cote Client (ETU4090)
 
-## A faire (Cote Client)
+## Login (Cote Client)
 
-- [ ] Creer la page de connexion client avec un numero de telephone
-- [ ] Afficher le solde du compte du client connecte
-- [ ] Creer le formulaire pour permettre a un client de faire un depot
-- [ ] Creer le formulaire pour faire un retrait et calculer automatiquement les frais
-- [ ] Creer le formulaire pour faire un transfert vers un autre client et calculer les frais
-- [ ] Creer la page pour afficher l'historique des operations du client connecte
+- [OK] Créer une page d'auto-authentification pour le client.
+- [OK] Si le client n'existe pas encore dans la base de donnée, il faut le créer.
 
-## A faire (Securite et Validation)
+## Solde (Cote Client)
 
-- [ ] Mettre en place les sessions pour gerer la connexion du client
-- [ ] Proteger les pages du client pour empecher l'acces sans connexion
-- [ ] Creer la fonctionnalite de deconnexion pour le client
-- [ ] Verifier que le numero de telephone utilise un prefixe valide lors de la connexion
-- [ ] Valider que les montants des operations respectent les limites des baremes
-- [ ] Afficher des messages d'erreur si le solde est insuffisant ou le numero introuvable
+- [OK] Affichage du navbars
+- [OK] Afficher le numéro du client
+- [OK] Afficher le solde du client
 
-----
+## Faire un trigger pour l'opération (Cote Client)
+
+- [OK] Mettre les 3 conditions pour chaque type d'opérations
+
+## Faire un dépôt (Cote Client)
+
+- [OK] Affichage du navbars
+- [OK] Formulaire d'ajout dépôt
+- [OK] Excécution du trigger
+
+## Faire un retrait (Cote Client)
+
+- [OK] Affichage du navbars
+- [OK] Formulaire d'ajout retrait
+- [OK] Excécution du trigger
+
+## Faire un transfert (Cote Client)
+
+- [OK] Affichage du navbars
+- [OK] Formulaire d'ajout transfert
+- [OK] Excécution du trigger
+
+## Voit historique (Cote Client)
+
+- [OK] Affichage du navbars
+- [OK] Join de tous les tables avec l'opérateur
+- [OK] Affichage de l'historique
