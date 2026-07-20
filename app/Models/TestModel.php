@@ -16,6 +16,7 @@ class TestModel extends Model
         return $query->getResultArray();
     }
 
+
     public function getPostgres()
     {
         $db = Database::connect('postgres');
@@ -24,6 +25,7 @@ class TestModel extends Model
 
         return $query->getResultArray();
     }
+
 
     public function getSqlite()
     {

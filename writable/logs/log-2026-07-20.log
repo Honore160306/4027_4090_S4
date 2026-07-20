@@ -82,3 +82,61 @@ in SYSTEMPATH\Database\Database.php on line 186.
  9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
+CRITICAL - 2026-07-20 05:57:42 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "pgsql" is not loaded. Install and enable it to use "Postgre" driver.
+[Method: GET, Route: test]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('Postgre')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'postgres')
+ 3 APPPATH\Models\TestModel.php(21): CodeIgniter\Database\Config::connect('postgres')
+ 4 APPPATH\Controllers\Test.php(14): App\Models\TestModel->getPostgres()
+ 5 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Test->index()
+ 6 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Test))
+ 7 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
+CRITICAL - 2026-07-20 06:36:57 --> ErrorException: Undefined variable $mysql
+[Method: GET, Route: test]
+in APPPATH\Views\test.php on line 17.
+ 1 APPPATH\Views\test.php(17): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $mysql', 'C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\app\\Views\\test.php', 17)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\app\\Views\\test.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->{closure:CodeIgniter\View\View::render():237}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('test', [], true)
+ 5 APPPATH\Controllers\Test.php(17): view('test', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Test->index()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Test))
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
+CRITICAL - 2026-07-20 06:40:06 --> ErrorException: Undefined variable $postgres
+[Method: GET, Route: test]
+in APPPATH\Views\test.php on line 37.
+ 1 APPPATH\Views\test.php(37): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $postgres', 'C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\app\\Views\\test.php', 37)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\app\\Views\\test.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->{closure:CodeIgniter\View\View::render():237}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('test', [], true)
+ 5 APPPATH\Controllers\Test.php(17): view('test', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Test->index()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Test))
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
+CRITICAL - 2026-07-20 06:56:45 --> CodeIgniter\Exceptions\CriticalError: The required PHP extension "pgsql" is not loaded. Install and enable it to use "Postgre" driver.
+[Method: GET, Route: test]
+in SYSTEMPATH\Database\Database.php on line 186.
+ 1 SYSTEMPATH\Database\Database.php(59): CodeIgniter\Database\Database->checkDbExtension('Postgre')
+ 2 SYSTEMPATH\Database\Config.php(82): CodeIgniter\Database\Database->load([...], 'postgres')
+ 3 APPPATH\Models\TestModel.php(22): CodeIgniter\Database\Config::connect('postgres')
+ 4 APPPATH\Controllers\Test.php(14): App\Models\TestModel->getPostgres()
+ 5 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Test->index()
+ 6 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Test))
+ 7 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
