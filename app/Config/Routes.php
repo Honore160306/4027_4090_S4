@@ -23,6 +23,7 @@ $routes->group('operateur', function($routes) {
 });
 
 $routes->get('/client/login', 'ClientLoginController::login');
+$routes->get('logout', 'AccueilController::accueil');
 $routes->post('/client/solde', 'ClientSoldeController::solde');
 $routes->get('/client/solde2', 'ClientSoldeController::solde2');
 
