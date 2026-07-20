@@ -149,8 +149,16 @@ VALUES (2,50001,200000,1500);
 -- BAREMES TRANSFERT
 -- ======================================
 
+<<<<<<< HEAD
 INSERT INTO baremes_frais(type_operation_id,montant_min,montant_max,frais)
 VALUES (3,0,5000,50);
+=======
+ALTER TABLE prefixes
+ADD COLUMN id_operateur INTEGER;
+ 
+UPDATE prefixes SET id_operateur = 3 WHERE id = 1;
+UPDATE prefixes SET id_operateur = 1 WHERE id = 2;
+>>>>>>> 2419ca6b8ecafe3e41a3fb6b6946d6848a2ecbd9
 
 INSERT INTO baremes_frais(type_operation_id,montant_min,montant_max,frais)
 VALUES (3,5001,20000,200);
