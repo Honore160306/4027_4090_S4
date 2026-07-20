@@ -63,3 +63,5 @@
 - [ ] Verifier que le numero de telephone utilise un prefixe valide lors de la connexion
 - [ ] Valider que les montants des operations respectent les limites des baremes
 - [ ] Afficher des messages d'erreur si le solde est insuffisant ou le numero introuvable
+
+----
