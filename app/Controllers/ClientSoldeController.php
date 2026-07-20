@@ -31,4 +31,9 @@ class ClientSoldeController extends BaseController
             'solde'  => $solde
         ]);
     }
+
+    public function solde2()
+    {
+        return view('client/solde');
+    }
 }
