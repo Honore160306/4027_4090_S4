@@ -24,6 +24,7 @@ $routes->group('operateur', function($routes) {
 
 $routes->get('/client/login', 'ClientLoginController::login');
 $routes->post('/client/solde', 'ClientSoldeController::solde');
+$routes->get('/client/solde2', 'ClientSoldeController::solde2');
 
 $routes->get('/client/depot', 'ClientDepotController::depot');
 $routes->get('/client/depot/ajout', 'ClientDepotController::ajout');

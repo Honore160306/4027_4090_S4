@@ -16,7 +16,7 @@
         <div class="sidebar-logo">MM.</div>
         <div class="sidebar-menu">
             <!-- Icon Solde -->
-            <a href="<?= base_url('client/solde') ?>" class="<?= url_is('client/solde*') ? 'active' : '' ?>" title="Mon Solde">
+            <a href="<?= base_url('client/solde2') ?>" class="<?= url_is('client/solde*') ? 'active' : '' ?>" title="Mon Solde">
                 <svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3zm1 0v10h12V3H2z"/><path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>
             </a>
             
