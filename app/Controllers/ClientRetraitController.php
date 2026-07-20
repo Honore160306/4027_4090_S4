@@ -9,41 +9,174 @@ class ClientRetraitController extends BaseController
         return view('client/retrait');
     }
 
+
     public function ajout()
     {
         $db = \Config\Database::connect();
 
-        $clientId = session()->get('client_id');
-        $montant = $this->request->getPost('montant');
 
-        // Récupérer le type "depot" (ou utiliser directement son id si tu le connais)
-        $sql = "SELECT id FROM types_operation WHERE nom = ?";
-        $result = $db->query($sql, ['depot'])->getRow();
 
-        $typeOperationId = $result->id;
+        /*
+         * Récupérer le numéro du client connecté
+         */
+        $numero = session()->get('numero');
 
-        // Récupérer les frais correspondants
-        $sql = "SELECT frais
-                FROM baremes_frais
-                WHERE type_operation_id = ?
-                AND ? BETWEEN montant_min AND montant_max";
 
-        $result = $db->query($sql, [$typeOperationId, $montant])->getRow();
+        if (!$numero) {
+            return redirect()
+                ->to(site_url('login'))
+                ->with('error', 'Vous devez être connecté.');
+        }
 
-        $frais = $result ? $result->frais : 0;
 
-        // Insertion dans operations
-        $sql = "INSERT INTO operations
-                (client_id, client_destinataire_id, type_operation_id, montant, frais)
-                VALUES (?, NULL, ?, ?, ?)";
 
-        $db->query($sql, [
-            $clientId,
-            $typeOperationId,
-            $montant,
-            $frais
-        ]);
+        /*
+         * Récupérer l'id du client
+         */
+        $client = $db->query(
+            "SELECT id, solde 
+             FROM clients 
+             WHERE numero_telephone = ?",
+            [$numero]
+        )->getRow();
 
-        return redirect()->to(site_url('client/retrait'));
+
+
+        if (!$client) {
+            return redirect()
+                ->back()
+                ->with('error', 'Client introuvable.');
+        }
+
+
+        $clientId = $client->id;
+        $solde = $client->solde;
+
+
+
+        /*
+         * Récupérer le montant
+         */
+        $montant = $this->request->getGet('montant');
+
+
+
+        if (!$montant || $montant <= 0) {
+            return redirect()
+                ->back()
+                ->with('error', 'Montant invalide.');
+        }
+
+
+
+        /*
+         * Vérifier le solde disponible
+         */
+        if ($montant > $solde) {
+            return redirect()
+                ->back()
+                ->with('error', 'Solde insuffisant.');
+        }
+
+
+
+
+        /*
+         * Récupérer le type opération retrait
+         */
+        $type = $db->query(
+            "SELECT id 
+             FROM types_operation 
+             WHERE nom = ?",
+            ['retrait']
+        )->getRow();
+
+
+
+        if (!$type) {
+            return redirect()
+                ->back()
+                ->with('error', 'Type opération retrait introuvable.');
+        }
+
+
+        $typeOperationId = $type->id;
+
+
+
+
+        /*
+         * Calculer les frais
+         */
+        $bareme = $db->query(
+            "SELECT frais
+             FROM baremes_frais
+             WHERE type_operation_id = ?
+             AND ? BETWEEN montant_min AND montant_max",
+            [
+                $typeOperationId,
+                $montant
+            ]
+        )->getRow();
+
+
+
+        $frais = $bareme ? $bareme->frais : 0;
+
+
+
+
+
+        /*
+         * Insérer l'opération
+         */
+        $sql = "
+            INSERT INTO operations
+            (
+                client_id,
+                client_destinataire_id,
+                type_operation_id,
+                montant,
+                frais
+            )
+            VALUES (?, NULL, ?, ?, ?)
+        ";
+
+
+
+        $db->query(
+            $sql,
+            [
+                $clientId,
+                $typeOperationId,
+                $montant,
+                $frais
+            ]
+        );
+
+
+
+
+
+        /*
+         * Mettre à jour le solde du client
+         */
+        $db->query(
+            "UPDATE clients
+             SET solde = solde - ?
+             WHERE id = ?",
+            [
+                $montant,
+                $clientId
+            ]
+        );
+
+
+
+
+
+        return redirect()
+            ->to(site_url('client/retrait'))
+            ->with('success', 'Retrait effectué avec succès.');
     }
 }

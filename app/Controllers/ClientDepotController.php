@@ -9,41 +9,150 @@ class ClientDepotController extends BaseController
         return view('client/depot');
     }
 
+
     public function ajout()
     {
         $db = \Config\Database::connect();
 
-        $clientId = session()->get('client_id');
-        $montant = $this->request->getPost('montant');
 
-        // Récupérer le type "depot" (ou utiliser directement son id si tu le connais)
-        $sql = "SELECT id FROM types_operation WHERE nom = ?";
-        $result = $db->query($sql, ['depot'])->getRow();
+        /*
+         * Récupérer le numéro du client connecté
+         */
+        $numero = session()->get('numero');
 
-        $typeOperationId = $result->id;
 
-        // Récupérer les frais correspondants
-        $sql = "SELECT frais
-                FROM baremes_frais
-                WHERE type_operation_id = ?
-                AND ? BETWEEN montant_min AND montant_max";
+        if (!$numero) {
+            return redirect()
+                ->to(site_url('login'))
+                ->with('error', 'Vous devez être connecté.');
+        }
 
-        $result = $db->query($sql, [$typeOperationId, $montant])->getRow();
 
-        $frais = $result ? $result->frais : 0;
+        /*
+         * Récupérer l'id du client
+         * car operations.client_id attend l'id et non le numéro
+         */
+        $client = $db->query(
+            "SELECT id FROM clients WHERE numero_telephone = ?",
+            [$numero]
+        )->getRow();
 
-        // Insertion dans operations
-        $sql = "INSERT INTO operations
-                (client_id, client_destinataire_id, type_operation_id, montant, frais)
-                VALUES (?, NULL, ?, ?, ?)";
 
-        $db->query($sql, [
-            $clientId,
-            $typeOperationId,
-            $montant,
-            $frais
-        ]);
+        if (!$client) {
+            return redirect()
+                ->back()
+                ->with('error', 'Client introuvable.');
+        }
 
-        return redirect()->to(site_url('client/solde'));
+
+        $clientId = $client->id;
+
+
+
+        /*
+         * Récupérer le montant
+         */
+        $montant = $this->request->getGet('montant');
+
+
+        if (!$montant || $montant <= 0) {
+            return redirect()
+                ->back()
+                ->with('error', 'Montant invalide.');
+        }
+
+
+
+        /*
+         * Récupérer le type opération dépôt
+         */
+        $type = $db->query(
+            "SELECT id 
+             FROM types_operation 
+             WHERE nom = ?",
+            ['depot']
+        )->getRow();
+
+
+
+        if (!$type) {
+            return redirect()
+                ->back()
+                ->with('error', 'Type opération dépôt introuvable.');
+        }
+
+
+        $typeOperationId = $type->id;
+
+
+
+        /*
+         * Calculer les frais
+         */
+        $bareme = $db->query(
+            "SELECT frais
+             FROM baremes_frais
+             WHERE type_operation_id = ?
+             AND ? BETWEEN montant_min AND montant_max",
+            [
+                $typeOperationId,
+                $montant
+            ]
+        )->getRow();
+
+
+
+        $frais = $bareme ? $bareme->frais : 0;
+
+
+
+
+        /*
+         * Insérer l'opération
+         */
+        $sql = "
+            INSERT INTO operations
+            (
+                client_id,
+                client_destinataire_id,
+                type_operation_id,
+                montant,
+                frais
+            )
+            VALUES (?, NULL, ?, ?, ?)
+        ";
+
+
+
+        $db->query(
+            $sql,
+            [
+                $clientId,
+                $typeOperationId,
+                $montant,
+                $frais
+            ]
+        );
+
+
+
+        /*
+         * Mettre à jour le solde du client
+         */
+        $db->query(
+            "UPDATE clients
+             SET solde = solde + ?
+             WHERE id = ?",
+            [
+                $montant,
+                $clientId
+            ]
+        );
+
+
+
+        return redirect()
+            ->to(site_url('client/depot'))
+            ->with('success', 'Dépôt effectué avec succès.');
     }
 }

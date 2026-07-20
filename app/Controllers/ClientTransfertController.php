@@ -9,71 +9,278 @@ class ClientTransfertController extends BaseController
         return view('client/transfert');
     }
 
+
     public function ajout()
     {
         $db = \Config\Database::connect();
 
-        // Client connecté
-        $clientId = session()->get('client_id');
 
-        // Données du formulaire
-        $montant = (float) $this->request->getPost('montant');
-        $numeroDest = trim($this->request->getPost('numero_dest'));
+        /*
+        ================================
+        Récupérer le client connecté
+        ================================
+        */
 
-        // Vérifier que le destinataire existe
-        $sql = "SELECT id, numero_telephone
-                FROM clients
-                WHERE numero_telephone = ?";
-        $dest = $db->query($sql, [$numeroDest])->getRow();
+        $numeroSession = session()->get('numero');
 
-        if (!$dest) {
-            return redirect()->back()->with('error', 'Le destinataire est introuvable.');
+
+        if (!$numeroSession) {
+
+            return redirect()->back()
+                ->with('error', 'Session numéro inexistante.');
         }
 
-        // Empêcher le transfert vers soi-même
-        if ($dest->id == $clientId) {
-            return redirect()->back()->with('error', 'Vous ne pouvez pas transférer vers votre propre numéro.');
+
+
+        $client = $db->query(
+            "SELECT id, solde
+             FROM clients
+             WHERE numero_telephone=?",
+            [$numeroSession]
+        )->getRow();
+
+
+
+        if (!$client) {
+
+            return redirect()->back()
+                ->with('error', 'Client introuvable.');
         }
 
-        // Récupérer le type d'opération "transfert"
-        $sql = "SELECT id
-                FROM types_operation
-                WHERE nom = ?";
-        $type = $db->query($sql, ['transfert'])->getRow();
+
+        $clientId = $client->id;
+
+
+
+        /*
+        ================================
+        Données formulaire
+        ================================
+        */
+
+
+        $montantTotal = (float)$this->request->getGet('montant');
+
+        $numeros = trim($this->request->getGet('numeros'));
+
+
+
+        if ($montantTotal <= 0) {
+
+            return redirect()->back()
+                ->with('error','Montant invalide.');
+        }
+
+
+
+        if (!$numeros) {
+
+            return redirect()->back()
+                ->with('error','Aucun destinataire.');
+        }
+
+
+
+        /*
+        ================================
+        Liste destinataires
+        ================================
+        */
+
+
+        $listeNumeros = preg_split(
+            '/[\r\n,]+/',
+            $numeros
+        );
+
+
+        $destinataires = [];
+
+
+        foreach ($listeNumeros as $num) {
+
+            $num = trim($num);
+
+            if ($num != '') {
+
+                $destinataires[] = $num;
+            }
+        }
+
+
+        $destinataires = array_unique($destinataires);
+
+
+
+        $nombreDest = count($destinataires);
+
+
+        if ($nombreDest == 0) {
+
+            return redirect()->back()
+                ->with('error','Aucun destinataire.');
+        }
+
+
+
+        $montantParDest = $montantTotal / $nombreDest;
+
+
+
+        /*
+        ================================
+        Type transfert
+        ================================
+        */
+
+
+        $type = $db->query(
+            "SELECT id
+             FROM types_operation
+             WHERE nom='transfert'"
+        )->getRow();
+
+
 
         if (!$type) {
-            return redirect()->back()->with('error', 'Type d\'opération introuvable.');
+
+            return redirect()->back()
+                ->with('error','Type transfert introuvable.');
         }
+
+
 
         $typeOperationId = $type->id;
 
-        // Récupérer les frais
-        $sql = "SELECT frais
-                FROM baremes_frais
-                WHERE type_operation_id = ?
-                AND ? BETWEEN montant_min AND montant_max";
 
-        $result = $db->query($sql, [$typeOperationId, $montant])->getRow();
 
-        $frais = $result ? $result->frais : 0;
 
-        // Vérifier le solde du client
-        $sql = "SELECT solde
-                FROM clients
-                WHERE id = ?";
+        /*
+        ================================
+        Calcul frais
+        ================================
+        */
 
-        $client = $db->query($sql, [$clientId])->getRow();
 
-        if (!$client) {
-            return redirect()->back()->with('error', 'Client introuvable.');
+        $fraisTotal = 0;
+
+
+        foreach ($destinataires as $numero) {
+
+
+            $frais = $db->query(
+                "SELECT frais
+                 FROM baremes_frais
+                 WHERE type_operation_id=?
+                 AND ? BETWEEN montant_min AND montant_max",
+                [
+                    $typeOperationId,
+                    $montantParDest
+                ]
+            )->getRow();
+
+
+
+            if ($frais) {
+
+                $fraisTotal += $frais->frais;
+            }
         }
 
-        if ($client->solde < ($montant + $frais)) {
-            return redirect()->back()->with('error', 'Solde insuffisant.');
+
+
+        $totalDebit = $montantTotal + $fraisTotal;
+
+
+
+        if ($client->solde < $totalDebit) {
+
+
+            return redirect()->back()
+                ->with(
+                    'error',
+                    'Solde insuffisant. Nécessaire : '.$totalDebit.' Ar'
+                );
         }
 
-        // Enregistrer l'opération
-        $sql = "INSERT INTO operations
+
+
+
+        /*
+        ================================
+        Transaction
+        ================================
+        */
+
+
+        $db->transStart();
+
+
+
+        foreach ($destinataires as $numero) {
+
+
+            $dest = $db->query(
+                "SELECT id
+                 FROM clients
+                 WHERE numero_telephone=?",
+                [$numero]
+            )->getRow();
+
+
+
+
+            if (!$dest) {
+
+                $db->transRollback();
+
+                return redirect()->back()
+                    ->with(
+                        'error',
+                        "Le numéro $numero n'existe pas."
+                    );
+            }
+
+
+
+            // Interdire transfert vers soi-même
+
+            if ($dest->id == $clientId) {
+
+
+                $db->transRollback();
+
+
+                return redirect()->back()
+                    ->with(
+                        'error',
+                        'Impossible de transférer vers votre propre numéro.'
+                    );
+            }
+
+
+
+
+            $frais = $db->query(
+                "SELECT frais
+                 FROM baremes_frais
+                 WHERE type_operation_id=?
+                 AND ? BETWEEN montant_min AND montant_max",
+                [
+                    $typeOperationId,
+                    $montantParDest
+                ]
+            )->getRow();
+
+
+
+            $fraisDest = $frais ? $frais->frais : 0;
+
+
+
+
+            $db->query(
+                "INSERT INTO operations
                 (
                     client_id,
                     client_destinataire_id,
@@ -81,19 +288,39 @@ class ClientTransfertController extends BaseController
                     montant,
                     frais
                 )
-                VALUES (?, ?, ?, ?, ?)";
+                VALUES(?,?,?,?,?)",
+                [
+                    $clientId,
+                    $dest->id,
+                    $typeOperationId,
+                    $montantParDest,
+                    $fraisDest
+                ]
+            );
+        }
 
-        $db->query($sql, [
-            $clientId,
-            $dest->id,
-            $typeOperationId,
-            $montant,
-            $frais
-        ]);
 
-        // Le trigger met automatiquement à jour les soldes
 
-        return redirect()->to(site_url('client/transfert'))
-                         ->with('success', 'Transfert effectué avec succès.');
+        $db->transComplete();
+
+
+
+        if ($db->transStatus() === false) {
+
+            return redirect()->back()
+                ->with(
+                    'error',
+                    'Erreur pendant le transfert.'
+                );
+        }
+
+
+
+        return redirect()
+            ->to(site_url('client/transfert'))
+            ->with(
+                'success',
+                'Transfert multiple effectué avec succès.'
+            );
     }
 }
