@@ -1,21 +1,23 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Faire un transfert</title>
-</head>
-<body>
+<?php $title = 'Faire un transfert'; ?>
+<?= $this->extend('client/layout') ?>
 
-<a href="<?= site_url('client/solde') ?>">Voir le solde</a>
-<a href="<?= site_url('client/depot') ?>">Faire un dépôt</a>
-<a href="<?= site_url('client/retrait') ?>">Faire un retrait</a>
-<a href="<?= site_url('client/transfert') ?>">Faire un transfert</a>
-<a href="<?= site_url('client/historique') ?>">Voir les historiques</a>
-
-<h1>Faire un transfert</h1>
-<form action="client/transfert/ajout" method="post">
-    <p>Montant: <input type="text" name="montant"></p>
-    <input type="submit" value="valider">
-</form>
-</body>
-</html>
+<?= $this->section('content') ?>
+<div class="row">
+    <div class="col-md-6">
+        <div class="custom-card">
+            <h5 class="custom-card-title">Nouveau transfert</h5>
+            <form action="<?= site_url('client/transfert/ajout') ?>" method="post">
+                <!-- <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">NUMÉRO DU DESTINATAIRE</label>
+                    <input type="text" class="form-control bg-light border-0 py-2 fw-bold" name="numero_destinataire" placeholder="033 XX XXX XX">
+                </div> -->
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">MONTANT À TRANSFÉRER (Ar)</label>
+                    <input type="number" step="0.01" class="form-control bg-light border-0 py-3 fs-5 fw-bold" name="montant" required placeholder="0.00">
+                </div>
+                <button type="submit" class="btn btn-custom w-100 py-3 fw-bold rounded-pill">Valider le transfert</button>
+            </form>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>

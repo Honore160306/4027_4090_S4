@@ -27,7 +27,7 @@
 - [OK] Creer le modele ClientModel pour gerer la table clients
 - [OK] Creer le modele OperationModel pour gerer la table operations
 
-## Controleurs (Cote Operateur)
+## Controleurs 
 
 - [OK] Creer AccueilController pour afficher la page d'accueil de l'operateur
 - [OK] Creer PrefixeController pour lister, ajouter et supprimer des prefixes
@@ -35,7 +35,7 @@
 - [OK] Creer GainController pour afficher la situation des gains a partir de la vue SQL
 - [OK] Creer ClientController pour afficher la liste des comptes clients
 
-## Vues (Cote Operateur)
+## Vues
 
 - [OK] Creer la vue accueil.php pour la navigation principale de l'operateur
 - [OK] Creer la vue operateur/prefixes.php pour la gestion des prefixes

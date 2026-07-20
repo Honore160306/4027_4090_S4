@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Faire un depôt</title>
-</head>
-<body>
+<?php $title = 'Faire un dépôt'; ?>
+<?= $this->extend('client/layout') ?>
 
-<a href="<?= site_url('client/solde') ?>">Voir le solde</a>
-<a href="<?= site_url('client/depot') ?>">Faire un dépôt</a>
-<a href="<?= site_url('client/retrait') ?>">Faire un retrait</a>
-<a href="<?= site_url('client/transfert') ?>">Faire un transfert</a>
-<a href="<?= site_url('client/historique') ?>">Voir les historiques</a>
-
-<h1>Faire un depôt</h1>
-<form action="client/depot/ajout" method="post">
-    <p>Montant: <input type="text" name="montant"></p>
-    <input type="submit" value="valider">
-</form>
-</body>
-</html>
+<?= $this->section('content') ?>
+<div class="row">
+    <div class="col-md-6">
+        <div class="custom-card">
+            <h5 class="custom-card-title">Nouveau dépôt</h5>
+            <form action="<?= site_url('client/depot/ajout') ?>" method="post">
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">MONTANT À DÉPOSER (Ar)</label>
+                    <input type="number" step="0.01" class="form-control bg-light border-0 py-3 fs-5 fw-bold" name="montant" required placeholder="0.00">
+                </div>
+                <button type="submit" class="btn btn-custom w-100 py-3 fw-bold rounded-pill">Valider le dépôt</button>
+            </form>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>

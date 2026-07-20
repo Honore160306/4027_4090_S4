@@ -1,71 +1,63 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Situation Gains - Opérateur</title>
-</head>
-<body class="bg-light">
+<?php $title = 'Situation des Gains'; ?>
+<?= $this->extend('operateur/layout') ?>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/operateur">Admin Opérateur</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/operateur/prefixes">Préfixes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/operateur/baremes">Barèmes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/operateur/gains">Situation Gains</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/operateur/clients">Comptes Clients</a>
-                    </li>
-                </ul>
+<?= $this->section('content') ?>
+<div class="row mb-4">
+    <?php 
+    $total_general = 0;
+    if(isset($gains) && !empty($gains)) {
+        foreach($gains as $g) {
+            $total_general += $g['gain_total'];
+        }
+    }
+    ?>
+    <div class="col-md-4">
+        <div class="dark-card h-100">
+            <div>
+                <div class="dark-card-title">Gains Totaux Globaux</div>
+                <div class="dark-card-value text-success">+<?= number_format($total_general, 2, ',', ' ') ?> Ar</div>
             </div>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        <div class="row mb-4">
-            <div class="col">
-                <h2 class="text-primary">Situation des Gains</h2>
-                <p class="text-muted">Gains obtenus grâce aux frais sur les retraits et transferts.</p>
-            </div>
-        </div>
-        
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover m-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Type d'opération</th>
-                            <th>Nombre d'opérations effectuées</th>
-                            <th>Gain Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(isset($gains) && !empty($gains)): ?>
-                            <?php foreach($gains as $g): ?>
-                            <tr>
-                                <td class="align-middle fw-bold"><?= ucfirst($g['type_operation']) ?></td>
-                                <td class="align-middle"><?= $g['nombre_operations'] ?></td>
-                                <td class="align-middle fw-bold text-success"><?= number_format($g['gain_total'], 2, ',', ' ') ?> Ar</td>
-                            </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr><td colspan="3" class="text-center p-4 text-muted">Aucun gain enregistré pour le moment.</td></tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <div class="bg-white rounded-circle p-2 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; color: #1a1b22;">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3zm1 0v10h12V3H2z"/><path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>
             </div>
         </div>
     </div>
-</body>
-</html>
+    <div class="col-md-8">
+        <div class="custom-card h-100 d-flex flex-column justify-content-center m-0">
+            <h5 class="custom-card-title mb-1">Résumé des opérations</h5>
+            <p class="text-muted small mb-0">Les gains sont générés par les frais prélevés sur les retraits et les transferts.</p>
+        </div>
+    </div>
+</div>
+
+<div class="custom-card p-4">
+    <h5 class="custom-card-title mb-4">Détails des gains par type</h5>
+    
+    <div class="row">
+        <?php if(isset($gains) && !empty($gains)): ?>
+            <?php foreach($gains as $g): ?>
+            <div class="col-md-6">
+                <div class="history-item mb-3 p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5z"/></svg>
+                        </div>
+                        <div>
+                            <div class="history-item-title"><?= ucfirst($g['type_operation']) ?></div>
+                            <div class="history-item-subtitle"><?= $g['nombre_operations'] ?> opérations effectuées</div>
+                        </div>
+                    </div>
+                    <div class="history-item-amount text-success fs-5">
+                        +<?= number_format($g['gain_total'], 2, ',', ' ') ?> Ar
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="col-12 text-center p-5 text-muted">
+                Aucun gain enregistré pour le moment.
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<?= $this->endSection() ?>

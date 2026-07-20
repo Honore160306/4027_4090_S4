@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Solde du client</title>
-</head>
-<body>
+<?php $title = 'Mon Solde'; ?>
+<?= $this->extend('client/layout') ?>
 
-<a href="<?= site_url('client/solde') ?>">Voir le solde</a>
-<a href="<?= site_url('client/depot') ?>">Faire un dépôt</a>
-<a href="<?= site_url('client/retrait') ?>">Faire un retrait</a>
-<a href="<?= site_url('client/transfert') ?>">Faire un transfert</a>
-<a href="<?= site_url('client/historique') ?>">Voir les historiques</a>
-
-<h1>Solde du client</h1>
-<p>Numéro : <?= esc(session()->get('numero')) ?></p>
-<p>Solde : <?= esc($solde) ?> Ar</p>
-
-</body>
-</html>
+<?= $this->section('content') ?>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="credit-card-box shadow-lg">
+            <div>
+                <p class="text-white-50 mb-1 small">Solde Actuel</p>
+                <h3 class="fw-bold mb-0" style="font-size: 32px;"><?= number_format($solde, 2, ',', ' ') ?> Ar</h3>
+            </div>
+            <div>
+                <p class="text-white-50 mb-1 small">Numéro du compte</p>
+                <p class="fw-bold mb-0 fs-5" style="letter-spacing: 2px;"><?= esc(session()->get('numero')) ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>
