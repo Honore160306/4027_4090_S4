@@ -13,7 +13,7 @@
     
     <!-- Sidebar / Menu Latéral -->
     <div class="sidebar">
-        <div class="sidebar-logo">mn.</div>
+        <div class="sidebar-logo">MM.</div>
         <div class="sidebar-menu">
             <!-- Icon Solde -->
             <a href="<?= base_url('client/solde') ?>" class="<?= url_is('client/solde*') ? 'active' : '' ?>" title="Mon Solde">

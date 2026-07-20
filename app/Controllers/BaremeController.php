@@ -42,4 +42,32 @@ class BaremeController extends BaseController
         
         return redirect()->to('/operateur/baremes');
     }
+
+    public function edit($id)
+    {
+        $baremeModel = new BaremeFraisModel();
+        $typeOpModel = new TypeOperationModel();
+        
+        $data['bareme'] = $baremeModel->find($id);
+        $data['types'] = $typeOpModel->findAll();
+        
+        if (!$data['bareme']) {
+            return redirect()->to('/operateur/baremes');
+        }
+        
+        return view('operateur/bareme_edit', $data);
+    }
+
+    public function update($id)
+    {
+        $baremeModel = new BaremeFraisModel();
+        $baremeModel->update($id, [
+            'type_operation_id' => $this->request->getPost('type_operation_id'),
+            'montant_min' => $this->request->getPost('montant_min'),
+            'montant_max' => $this->request->getPost('montant_max'),
+            'frais' => $this->request->getPost('frais'),
+        ]);
+        
+        return redirect()->to('/operateur/baremes');
+    }
 }

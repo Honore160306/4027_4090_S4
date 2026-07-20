@@ -14,6 +14,8 @@ $routes->group('operateur', function($routes) {
 
     $routes->get('baremes', 'BaremeController::index');
     $routes->post('baremes/create', 'BaremeController::create');
+    $routes->get('baremes/edit/(:num)', 'BaremeController::edit/$1');
+    $routes->post('baremes/update/(:num)', 'BaremeController::update/$1');
     $routes->get('baremes/delete/(:num)', 'BaremeController::delete/$1');
     
     $routes->get('gains', 'GainController::index');
