@@ -143,7 +143,7 @@ INSERT INTO operateurs (nom, pourcentage) VALUES ('Airtel', 10);
 ALTER TABLE prefixes
 ADD COLUMN id_operateur INTEGER;
  
-UPDATE prefixes SET id_operateur = 3 WHERE id = 0;
-UPDATE prefixes SET id_operateur = 1 WHERE id = 1;
+UPDATE prefixes SET id_operateur = 3 WHERE id = 1;
+UPDATE prefixes SET id_operateur = 1 WHERE id = 2;
 
 
