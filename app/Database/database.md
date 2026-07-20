@@ -1,3 +1,4 @@
+<!-- Création base de donnée -->
 cd C:\xampp\mysql\bin
 .\mysql -u root -p
 CREATE DATABASE `4027_4090_S4`
@@ -19,3 +20,15 @@ php spark db:create sqlite
 php spark migrate
 php spark migrate --group postgres
 php spark migrate --group sqlite
+
+<!-- Pour y entrer -->
+cd C:\xampp\mysql\bin
+.\mysql -u root -p
+USE `4027_4090_S4`;
+
+psql -U postgres
+\c "4027_4090_S4"
+
+Remove-Item writable\database\4027_4090_S4.db
+rm writable/database/4027_4090_S4.db
+sqlite3 writable/database/4027_4090_S4.db
