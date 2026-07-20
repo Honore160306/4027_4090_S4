@@ -8,10 +8,10 @@
     <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 </head>
 <body>
-    
+    `
    
     <div class="sidebar">
-        <div class="sidebar-logo">MM.</div>
+        <div class="sidebar-logo">Mm.</div>
         <div class="sidebar-menu">
           
             <a href="<?= base_url('operateur/gains') ?>" class="<?= url_is('operateur/gains*') ? 'active' : '' ?>" title="Tableau de bord (Gains)">

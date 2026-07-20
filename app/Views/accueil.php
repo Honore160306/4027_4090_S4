@@ -22,7 +22,7 @@
     
     <div class="custom-card shadow-lg p-5" style="width: 100%; max-width: 650px; border-radius: 30px;">
         <div class="text-center mb-5">
-            <h1 class="fw-bold" style="color: #1a1b22; font-size: 50px; letter-spacing: -2px;">mn.</h1>
+            <h1 class="fw-bold" style="color: #1a1b22; font-size: 50px; letter-spacing: -2px;">MobileMoney.</h1>
             <p class="text-muted fs-5">Bienvenue sur Mobile Money Simulator</p>
             <p class="text-muted small">Veuillez sélectionner votre profil pour continuer</p>
         </div>

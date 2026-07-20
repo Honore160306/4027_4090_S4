@@ -1,5 +1,7 @@
 # Liste des taches projet Mobile Money
 
+### V1 ###
+
 ## Base de donnees (ETU4027-ETU4090)
 
 - [OK] Creer la table prefixes
@@ -84,3 +86,28 @@
 - [OK] Affichage du navbars
 - [OK] Join de tous les tables avec l'opérateur
 - [OK] Affichage de l'historique
+
+### Fonctionnalités Opérateur
+
+- [OK] Ajout de la fonctionnalité "Modifier" pour les barèmes de frais (Création de la vue d'édition, méthodes dans le contrôleur et mise à jour des routes).
+
+
+### V2 ###
+
+### Design (cote operateur et cote client) (ETU4027-ETU4090)
+- [OK] Intégration de Bootstrap 5.
+- [OK] Création d'un CSS dans public/assets/css/style.css
+- [OK] Création d'un layout global 'layout.php' pour le dashboard opérateur.
+- [OK] Refonte complète des vues opérateur ('prefixes', 'baremes', 'gains', 'clients') pour utiliser le nouveau layout.
+- [OK] Refonte de la page d'accueil ('accueil.php') avec un choix de profil (Client / Opérateur) sous forme de grandes cartes.
+- [OK] Création d'un layout global 'layout.php' pour l'espace client.
+- [OK] Refonte complète des vues client : (login, solde, depot, retrait, transfert, historique) avec le nouveau layout.
+
+
+### Base de données et logique métier (Gains par Opérateur) (ETU4027)
+- [OK] Création de la table 'operateurs' (Yas, Orange, Airtel avec leur pourcentage de gain).
+- [OK] Modification de la table 'prefixes' pour lier chaque préfixe à un opérateur ('id_operateur').
+- [OK] Modification de la vue SQL 'situation_gains' pour calculer le gain réel par opérateur ('montant * pourcentage / 100') au lieu de sommer les frais.
+- [OK] Regroupement des gains par opérateur dans la vue SQL et affichage détaillé dans la vue 'gains.php' dans le dashboard opérateur.
+
+

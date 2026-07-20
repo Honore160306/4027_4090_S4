@@ -1191,3 +1191,17 @@ in APPPATH\Views\client\solde.php on line 10.
 10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Honore\\Documents\\GitHub\\4027_4090_S4\\public\\index.php')
+CRITICAL - 2026-07-20 13:58:33 --> ParseError: syntax error, unexpected token "<"
+[Method: POST, Route: client/solde]
+in APPPATH/Views/client/layout.php on line 51.
+ 1 SYSTEMPATH/View/View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 2 SYSTEMPATH/View/View.php(256): CodeIgniter\View\View->render()
+ 3 SYSTEMPATH/Common.php(1268): CodeIgniter\View\View->render()
+ 4 APPPATH/Controllers/ClientSoldeController.php(45): view()
+ 5 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\ClientSoldeController->solde()
+ 6 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+11 SYSTEMPATH/rewrite.php(44): require_once('/home/joshua/Documents/GitHub/4027_4090_S4/public/index.php')
