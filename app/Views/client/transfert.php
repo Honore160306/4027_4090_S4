@@ -15,6 +15,15 @@
                     <label class="form-label text-muted small fw-bold">MONTANT À TRANSFÉRER (Ar)</label>
                     <input type="number" step="0.01" class="form-control bg-light border-0 py-3 fs-5 fw-bold" name="montant" required placeholder="0.00">
                 </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">Numéro à transférer</label>
+                    <input type="text"
+                        class="form-control bg-light border-0 py-3 fs-5 fw-bold"
+                        name="numero_dest"
+                        maxlength="10"
+                        placeholder="0331234567"
+                        required>
+                </div>
                 <button type="submit" class="btn btn-custom w-100 py-3 fw-bold rounded-pill">Valider le transfert</button>
             </form>
         </div>
