@@ -60,7 +60,7 @@
                                 <?= number_format($b['frais'], 0, ',', ' ') ?> Ar
                             </td>
                             <td class="px-4 py-3 text-end text-nowrap">
-                                <a href="<?= base_url('operateur/baremes/edit/' . $b['id']) ?>" class="btn btn-outline-primary btn-sm rounded-pill px-3 me-2">Modifier</a>
+                                <a href="<?= base_url('operateur/baremes/edit/' . $b['id']) ?>" class="btn btn-outline-dark btn-sm rounded-pill px-3 me-2">Modifier</a>
                                 <a href="<?= base_url('operateur/baremes/delete/' . $b['id']) ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Supprimer ce barème ?');">Supprimer</a>
                             </td>
                         </tr>

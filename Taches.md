@@ -110,4 +110,8 @@
 - [OK] Modification de la vue SQL 'situation_gains' pour calculer le gain réel par opérateur ('montant * pourcentage / 100') au lieu de sommer les frais.
 - [OK] Regroupement des gains par opérateur dans la vue SQL et affichage détaillé dans la vue 'gains.php' dans le dashboard opérateur.
 
-
+### Nouvelles fonctionnalités (côté Client) (ETU4090)
+- [OK] Option pour inclure les frais de retrait lors de l'envoi (transfert).
+- [OK] Gérer l'absence de frais de retrait pour les transferts vers les autres opérateurs.
+- [OK] Implémenter l'envoi multiple vers plusieurs numéros (diviser le montant pour chaque numéro).
+- [OK] Restreindre l'envoi multiple uniquement vers des numéros du même opérateur.
