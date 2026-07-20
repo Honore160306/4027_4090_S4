@@ -14,7 +14,7 @@ class Database extends Config
     /**
      * Default connection group.
      */
-    public string $defaultGroup = 'default';
+    public string $defaultGroup = 'sqlite';
 
     /**
      * MySQL Connection (Default)

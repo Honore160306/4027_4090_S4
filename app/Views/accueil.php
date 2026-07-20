@@ -7,6 +7,6 @@
 </head>
 <body>
     <a href="/operateur">Opérateur</a><br>
-    <a href="/client">Client</a>
+    <a href="/client/login">Client</a>
 </body>
 </html>
