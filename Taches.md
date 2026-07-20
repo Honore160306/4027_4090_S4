@@ -79,7 +79,7 @@
 - [OK] Formulaire d'ajout transfert
 - [OK] Excécution du trigger
 
-## Voit historique (Cote Client)
+## Voir historique (Cote Client)
 
 - [OK] Affichage du navbars
 - [OK] Join de tous les tables avec l'opérateur
