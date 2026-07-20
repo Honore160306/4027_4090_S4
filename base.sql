@@ -130,3 +130,12 @@ VALUES (1, 3, 3, 3000, 50);
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (4, 2, 3, 25000, 500);
 
+CREATE TABLE orperateurs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nom TEXT NOT NULL UNIQUE,
+    pourcentage NUMERIC NOT NULL
+);
+
+ALTER TABLE prefixes
+ADD COLUMN id_operateur INTEGER;
+
