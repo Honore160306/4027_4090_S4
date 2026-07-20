@@ -130,12 +130,20 @@ VALUES (1, 3, 3, 3000, 50);
 INSERT INTO operations (client_id, client_destinataire_id, type_operation_id, montant, frais)
 VALUES (4, 2, 3, 25000, 500);
 
-CREATE TABLE orperateurs (
+CREATE TABLE operateurs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT NOT NULL UNIQUE,
     pourcentage NUMERIC NOT NULL
 );
 
+INSERT INTO operateurs (nom, pourcentage) VALUES ('Yas', 10);
+INSERT INTO operateurs (nom, pourcentage) VALUES ('Orange', 10);
+INSERT INTO operateurs (nom, pourcentage) VALUES ('Airtel', 10);
+
 ALTER TABLE prefixes
 ADD COLUMN id_operateur INTEGER;
+ 
+UPDATE prefixes SET id_operateur = 3 WHERE id = 0;
+UPDATE prefixes SET id_operateur = 1 WHERE id = 1;
+
 
