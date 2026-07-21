@@ -5,6 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 
 $routes->get('/', 'AccueilController::accueil');
+$routes->get('logout', 'AccueilController::accueil');
 
 $routes->group('operateur', function($routes) {
     $routes->get('/', 'PrefixeController::index');
@@ -23,7 +24,6 @@ $routes->group('operateur', function($routes) {
 });
 
 $routes->get('/client/login', 'ClientLoginController::login');
-$routes->get('logout', 'AccueilController::accueil');
 $routes->post('/client/solde', 'ClientSoldeController::solde');
 $routes->get('/client/solde2', 'ClientSoldeController::solde2');
 
