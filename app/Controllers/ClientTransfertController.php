@@ -9,28 +9,15 @@ class ClientTransfertController extends BaseController
         return view('client/transfert');
     }
 
-
     public function ajout()
     {
         $db = \Config\Database::connect();
-
-
-        /*
-        ================================
-        Récupérer le client connecté
-        ================================
-        */
-
         $numeroSession = session()->get('numero');
 
-
         if (!$numeroSession) {
-
             return redirect()->back()
                 ->with('error', 'Session numéro inexistante.');
         }
-
-
 
         $client = $db->query(
             "SELECT id, solde
@@ -39,100 +26,46 @@ class ClientTransfertController extends BaseController
             [$numeroSession]
         )->getRow();
 
-
-
         if (!$client) {
-
             return redirect()->back()
                 ->with('error', 'Client introuvable.');
         }
 
-
         $clientId = $client->id;
-
-
-
-        /*
-        ================================
-        Données formulaire
-        ================================
-        */
-
-
         $montantTotal = (float)$this->request->getGet('montant');
-
         $numeros = trim($this->request->getGet('numeros'));
 
-
-
         if ($montantTotal <= 0) {
-
             return redirect()->back()
-                ->with('error','Montant invalide.');
+                ->with('error', 'Montant invalide.');
         }
-
-
 
         if (!$numeros) {
-
             return redirect()->back()
-                ->with('error','Aucun destinataire.');
+                ->with('error', 'Aucun destinataire.');
         }
-
-
-
-        /*
-        ================================
-        Liste destinataires
-        ================================
-        */
-
 
         $listeNumeros = preg_split(
             '/[\r\n,]+/',
             $numeros
         );
-
-
         $destinataires = [];
 
-
         foreach ($listeNumeros as $num) {
-
             $num = trim($num);
-
             if ($num != '') {
-
                 $destinataires[] = $num;
             }
         }
 
-
         $destinataires = array_unique($destinataires);
-
-
-
         $nombreDest = count($destinataires);
 
-
         if ($nombreDest == 0) {
-
             return redirect()->back()
-                ->with('error','Aucun destinataire.');
+                ->with('error', 'Aucun destinataire.');
         }
-
-
-
         $montantParDest = $montantTotal / $nombreDest;
-
-
-
-        /*
-        ================================
-        Type transfert
-        ================================
-        */
-
 
         $type = $db->query(
             "SELECT id
@@ -140,34 +73,14 @@ class ClientTransfertController extends BaseController
              WHERE nom='transfert'"
         )->getRow();
 
-
-
         if (!$type) {
-
             return redirect()->back()
-                ->with('error','Type transfert introuvable.');
+                ->with('error', 'Type transfert introuvable.');
         }
-
-
-
         $typeOperationId = $type->id;
-
-
-
-
-        /*
-        ================================
-        Calcul frais
-        ================================
-        */
-
-
         $fraisTotal = 0;
 
-
         foreach ($destinataires as $numero) {
-
-
             $frais = $db->query(
                 "SELECT frais
                  FROM baremes_frais
@@ -179,47 +92,22 @@ class ClientTransfertController extends BaseController
                 ]
             )->getRow();
 
-
-
             if ($frais) {
-
                 $fraisTotal += $frais->frais;
             }
         }
-
-
-
         $totalDebit = $montantTotal + $fraisTotal;
 
-
-
         if ($client->solde < $totalDebit) {
-
-
             return redirect()->back()
                 ->with(
                     'error',
-                    'Solde insuffisant. Nécessaire : '.$totalDebit.' Ar'
+                    'Solde insuffisant. Nécessaire : ' . $totalDebit . ' Ar'
                 );
         }
 
-
-
-
-        /*
-        ================================
-        Transaction
-        ================================
-        */
-
-
         $db->transStart();
-
-
-
         foreach ($destinataires as $numero) {
-
-
             $dest = $db->query(
                 "SELECT id
                  FROM clients
@@ -227,13 +115,8 @@ class ClientTransfertController extends BaseController
                 [$numero]
             )->getRow();
 
-
-
-
             if (!$dest) {
-
                 $db->transRollback();
-
                 return redirect()->back()
                     ->with(
                         'error',
@@ -241,25 +124,14 @@ class ClientTransfertController extends BaseController
                     );
             }
 
-
-
-            // Interdire transfert vers soi-même
-
             if ($dest->id == $clientId) {
-
-
                 $db->transRollback();
-
-
                 return redirect()->back()
                     ->with(
                         'error',
                         'Impossible de transférer vers votre propre numéro.'
                     );
             }
-
-
-
 
             $frais = $db->query(
                 "SELECT frais
@@ -272,13 +144,7 @@ class ClientTransfertController extends BaseController
                 ]
             )->getRow();
 
-
-
             $fraisDest = $frais ? $frais->frais : 0;
-
-
-
-
             $db->query(
                 "INSERT INTO operations
                 (
@@ -299,22 +165,14 @@ class ClientTransfertController extends BaseController
             );
         }
 
-
-
         $db->transComplete();
-
-
-
         if ($db->transStatus() === false) {
-
             return redirect()->back()
                 ->with(
                     'error',
                     'Erreur pendant le transfert.'
                 );
         }
-
-
 
         return redirect()
             ->to(site_url('client/transfert'))

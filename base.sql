@@ -111,11 +111,6 @@ VALUES (2,20001,50000,600);
 INSERT INTO baremes_frais(type_operation_id,montant_min,montant_max,frais)
 VALUES (2,50001,200000,1500);
 
-ALTER TABLE prefixes
-ADD COLUMN id_operateur INTEGER;
-UPDATE prefixes SET id_operateur = 3 WHERE id = 1;
-UPDATE prefixes SET id_operateur = 1 WHERE id = 2;
-
 INSERT INTO baremes_frais(type_operation_id,montant_min,montant_max,frais)
 VALUES (3,5001,20000,200);
 INSERT INTO baremes_frais(type_operation_id,montant_min,montant_max,frais)

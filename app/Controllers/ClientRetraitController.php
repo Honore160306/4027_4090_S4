@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers;
 
 class ClientRetraitController extends BaseController
@@ -9,18 +8,10 @@ class ClientRetraitController extends BaseController
         return view('client/retrait');
     }
 
-
     public function ajout()
     {
         $db = \Config\Database::connect();
-
-
-
-        /*
-         * Récupérer le numéro du client connecté
-         */
         $numero = session()->get('numero');
-
 
         if (!$numero) {
             return redirect()
@@ -28,11 +19,6 @@ class ClientRetraitController extends BaseController
                 ->with('error', 'Vous devez être connecté.');
         }
 
-
-
-        /*
-         * Récupérer l'id du client
-         */
         $client = $db->query(
             "SELECT id, solde 
              FROM clients 
@@ -40,26 +26,15 @@ class ClientRetraitController extends BaseController
             [$numero]
         )->getRow();
 
-
-
         if (!$client) {
             return redirect()
                 ->back()
                 ->with('error', 'Client introuvable.');
         }
 
-
         $clientId = $client->id;
         $solde = $client->solde;
-
-
-
-        /*
-         * Récupérer le montant
-         */
         $montant = $this->request->getGet('montant');
-
-
 
         if (!$montant || $montant <= 0) {
             return redirect()
@@ -67,23 +42,12 @@ class ClientRetraitController extends BaseController
                 ->with('error', 'Montant invalide.');
         }
 
-
-
-        /*
-         * Vérifier le solde disponible
-         */
         if ($montant > $solde) {
             return redirect()
                 ->back()
                 ->with('error', 'Solde insuffisant.');
         }
 
-
-
-
-        /*
-         * Récupérer le type opération retrait
-         */
         $type = $db->query(
             "SELECT id 
              FROM types_operation 
@@ -91,23 +55,13 @@ class ClientRetraitController extends BaseController
             ['retrait']
         )->getRow();
 
-
-
         if (!$type) {
             return redirect()
                 ->back()
                 ->with('error', 'Type opération retrait introuvable.');
         }
-
-
         $typeOperationId = $type->id;
 
-
-
-
-        /*
-         * Calculer les frais
-         */
         $bareme = $db->query(
             "SELECT frais
              FROM baremes_frais
@@ -118,18 +72,8 @@ class ClientRetraitController extends BaseController
                 $montant
             ]
         )->getRow();
-
-
-
         $frais = $bareme ? $bareme->frais : 0;
 
-
-
-
-
-        /*
-         * Insérer l'opération
-         */
         $sql = "
             INSERT INTO operations
             (
@@ -142,8 +86,6 @@ class ClientRetraitController extends BaseController
             VALUES (?, NULL, ?, ?, ?)
         ";
 
-
-
         $db->query(
             $sql,
             [
@@ -154,13 +96,6 @@ class ClientRetraitController extends BaseController
             ]
         );
 
-
-
-
-
-        /*
-         * Mettre à jour le solde du client
-         */
         $db->query(
             "UPDATE clients
              SET solde = solde - ?
@@ -170,11 +105,6 @@ class ClientRetraitController extends BaseController
                 $clientId
             ]
         );
-
-
-
-
-
         return redirect()
             ->to(site_url('client/retrait'))
             ->with('success', 'Retrait effectué avec succès.');
