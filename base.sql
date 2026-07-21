@@ -131,6 +131,8 @@ INSERT INTO clients(numero_telephone,solde)
 VALUES ('0339876543',8000);
 INSERT INTO clients(numero_telephone,solde)
 VALUES ('0341112222',140000);
+INSERT INTO clients(numero_telephone,solde)
+VALUES ('0341152222',0);
 
 INSERT INTO operations(client_id,client_destinataire_id,type_operation_id,montant,frais)
 VALUES (1,NULL,1,10000,0);
