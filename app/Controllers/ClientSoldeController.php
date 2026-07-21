@@ -77,4 +77,26 @@ class ClientSoldeController extends BaseController
         'solde'  => $solde
     ]);
 }
+
+public function epargne(): string
+{
+    // Récupérer le numéro depuis la session
+    $numero = session()->get('numero');
+
+    $db = \Config\Database::connect();
+
+    $sql = "SELECT * FROM clients WHERE numero_telephone = ?";
+    $query = $db->query($sql, [$numero]);
+    $client = $query->getRow();
+
+    $clientId = $client->id;
+    $sql = "SELECT * FROM epargne WHERE id_client = ?";
+    $query = $db->query($sql, [$clientId]);
+    $epargne = $query->getRow();
+
+    $solde = $epargne->solde;
+    return view('client/epargne', [
+        'solde'  => $solde
+    ]);
+}
 }

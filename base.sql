@@ -164,3 +164,15 @@ INSERT INTO operations(client_id,client_destinataire_id,type_operation_id,montan
 VALUES (1,3,3,3000,50);
 INSERT INTO operations(client_id,client_destinataire_id,type_operation_id,montant,frais)
 VALUES (4,2,3,25000,500);
+
+CREATE TABLE epargne (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_client INTEGER,
+    solde NUMERIC NOT NULL
+);
+
+INSERT INTO epargne (id_client, solde) VALUES (1,0);
+INSERT INTO epargne (id_client, solde) VALUES (2,0);
+INSERT INTO epargne (id_client, solde) VALUES (3,0);
+INSERT INTO epargne (id_client, solde) VALUES (4,0);
+INSERT INTO epargne (id_client, solde) VALUES (5,30);

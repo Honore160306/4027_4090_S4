@@ -49,6 +49,19 @@
                         Un numéro par ligne
                     </small>
                 </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">
+                        POURCENTAGE EPARGNE
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        class="form-control bg-light border-0 py-3 fs-5 fw-bold"
+                        name=""prcEpargne
+                        required
+                        placeholder="10">
+                </div>
                 <button
                     type="submit"
                     class="btn btn-custom w-100 py-3 fw-bold rounded-pill">

@@ -144,15 +144,15 @@ class ClientTransfertController extends BaseController
                 ]
             )->getRow();
 
-             $frais_op = $db->query(
-                "SELECT * 
-                 FROM frais_meme_operateur
-                 WHERE id_operateur =? ",
-                [
-                    1
-                ]
-            )->getRow();
-            $fraisOp = $frais_op->$pourcentage;
+            //  $frais_op = $db->query(
+            //     "SELECT * 
+            //      FROM frais_meme_operateur
+            //      WHERE id_operateur =? ",
+            //     [
+            //         1
+            //     ]
+            // )->getRow();
+            // $fraisOp = $frais_op->pourcentage;
 
             $fraisDest = $frais ? $frais->frais : 0;
             $db->query(
@@ -170,9 +170,19 @@ class ClientTransfertController extends BaseController
                     $dest->id,
                     $typeOperationId,
                     $montantParDest,
-                    $fraisDest + ($fraisDest * $frais_op)/100
+                    $fraisDest
                 ]
             );
+
+            $db->query(
+            "UPDATE epargne
+             SET solde = solde + ?
+             WHERE id = ?",
+            [
+                $montantParDest,
+                $dest
+            ]
+        );
         }
 
         $db->transComplete();
