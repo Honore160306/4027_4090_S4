@@ -47,6 +47,16 @@ CREATE TABLE operations (
     FOREIGN KEY (type_operation_id) REFERENCES types_operation(id)
 );
 
+CREATE TABLE frais_meme_operateur (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_operateur INTEGER,
+    pourcentage NUMERIC NOT NULL
+);
+
+INSERT INTO frais_meme_operateur (id_operateur, pourcentage) VALUES (1,10);
+INSERT INTO frais_meme_operateur (id_operateur, pourcentage) VALUES (2,10);
+INSERT INTO frais_meme_operateur (id_operateur, pourcentage) VALUES (3,10);
+
 CREATE VIEW situation_gains AS
 SELECT
     op.nom AS operateur,
@@ -58,6 +68,21 @@ JOIN types_operation t ON t.id = o.type_operation_id
 JOIN clients c ON c.id = o.client_id
 JOIN prefixes p ON SUBSTR(c.numero_telephone, 1, LENGTH(p.prefixe)) = p.prefixe
 JOIN operateurs op ON op.id = p.id_operateur
+WHERE t.nom IN ('retrait', 'transfert')
+GROUP BY op.id, op.nom, t.nom;
+
+CREATE VIEW situation_gains_meme AS
+SELECT
+    op.nom AS operateur,
+    t.nom AS type_operation,
+    COUNT(o.id) AS nombre_operations,
+    SUM(o.montant * fm.pourcentage / 100.0) AS gain_total
+FROM operations o
+JOIN types_operation t ON t.id = o.type_operation_id
+JOIN clients c ON c.id = o.client_id
+JOIN prefixes p ON SUBSTR(c.numero_telephone, 1, LENGTH(p.prefixe)) = p.prefixe
+JOIN operateurs op ON op.id = p.id_operateur
+JOIN frais_meme_operateur fm ON fm.id_operateur = op.id 
 WHERE t.nom IN ('retrait', 'transfert')
 GROUP BY op.id, op.nom, t.nom;
 
