@@ -9,17 +9,10 @@ class ClientDepotController extends BaseController
         return view('client/depot');
     }
 
-
     public function ajout()
     {
         $db = \Config\Database::connect();
-
-
-        /*
-         * Récupérer le numéro du client connecté
-         */
         $numero = session()->get('numero');
-
 
         if (!$numero) {
             return redirect()
@@ -27,33 +20,18 @@ class ClientDepotController extends BaseController
                 ->with('error', 'Vous devez être connecté.');
         }
 
-
-        /*
-         * Récupérer l'id du client
-         * car operations.client_id attend l'id et non le numéro
-         */
         $client = $db->query(
             "SELECT id FROM clients WHERE numero_telephone = ?",
             [$numero]
         )->getRow();
-
 
         if (!$client) {
             return redirect()
                 ->back()
                 ->with('error', 'Client introuvable.');
         }
-
-
         $clientId = $client->id;
-
-
-
-        /*
-         * Récupérer le montant
-         */
         $montant = $this->request->getGet('montant');
-
 
         if (!$montant || $montant <= 0) {
             return redirect()
@@ -61,11 +39,6 @@ class ClientDepotController extends BaseController
                 ->with('error', 'Montant invalide.');
         }
 
-
-
-        /*
-         * Récupérer le type opération dépôt
-         */
         $type = $db->query(
             "SELECT id 
              FROM types_operation 
@@ -73,22 +46,13 @@ class ClientDepotController extends BaseController
             ['depot']
         )->getRow();
 
-
-
         if (!$type) {
             return redirect()
                 ->back()
                 ->with('error', 'Type opération dépôt introuvable.');
         }
-
-
         $typeOperationId = $type->id;
 
-
-
-        /*
-         * Calculer les frais
-         */
         $bareme = $db->query(
             "SELECT frais
              FROM baremes_frais
@@ -99,17 +63,8 @@ class ClientDepotController extends BaseController
                 $montant
             ]
         )->getRow();
-
-
-
         $frais = $bareme ? $bareme->frais : 0;
 
-
-
-
-        /*
-         * Insérer l'opération
-         */
         $sql = "
             INSERT INTO operations
             (
@@ -122,8 +77,6 @@ class ClientDepotController extends BaseController
             VALUES (?, NULL, ?, ?, ?)
         ";
 
-
-
         $db->query(
             $sql,
             [
@@ -134,11 +87,6 @@ class ClientDepotController extends BaseController
             ]
         );
 
-
-
-        /*
-         * Mettre à jour le solde du client
-         */
         $db->query(
             "UPDATE clients
              SET solde = solde + ?
@@ -148,8 +96,6 @@ class ClientDepotController extends BaseController
                 $clientId
             ]
         );
-
-
 
         return redirect()
             ->to(site_url('client/depot'))
