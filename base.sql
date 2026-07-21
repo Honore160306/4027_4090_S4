@@ -61,33 +61,33 @@ JOIN operateurs op ON op.id = p.id_operateur
 WHERE t.nom IN ('retrait', 'transfert')
 GROUP BY op.id, op.nom, t.nom;
 
-CREATE TRIGGER trg_operations_after_insert
-AFTER INSERT ON operations
-BEGIN
-    UPDATE clients
-    SET solde = solde + NEW.montant
-    WHERE id = NEW.client_id
-      AND NEW.type_operation_id =
-      (SELECT id FROM types_operation WHERE nom='depot');
+-- CREATE TRIGGER trg_operations_after_insert
+-- AFTER INSERT ON operations
+-- BEGIN
+--     UPDATE clients
+--     SET solde = solde + NEW.montant
+--     WHERE id = NEW.client_id
+--       AND NEW.type_operation_id =
+--       (SELECT id FROM types_operation WHERE nom='depot');
 
-    UPDATE clients
-    SET solde = solde - (NEW.montant + NEW.frais)
-    WHERE id = NEW.client_id
-      AND NEW.type_operation_id =
-      (SELECT id FROM types_operation WHERE nom='retrait');
+--     UPDATE clients
+--     SET solde = solde - (NEW.montant + NEW.frais)
+--     WHERE id = NEW.client_id
+--       AND NEW.type_operation_id =
+--       (SELECT id FROM types_operation WHERE nom='retrait');
 
-    UPDATE clients
-    SET solde = solde - (NEW.montant + NEW.frais)
-    WHERE id = NEW.client_id
-      AND NEW.type_operation_id =
-      (SELECT id FROM types_operation WHERE nom='transfert');
+--     UPDATE clients
+--     SET solde = solde - (NEW.montant + NEW.frais)
+--     WHERE id = NEW.client_id
+--       AND NEW.type_operation_id =
+--       (SELECT id FROM types_operation WHERE nom='transfert');
 
-    UPDATE clients
-    SET solde = solde + NEW.montant
-    WHERE id = NEW.client_destinataire_id
-      AND NEW.type_operation_id =
-      (SELECT id FROM types_operation WHERE nom='transfert');
-END;
+--     UPDATE clients
+--     SET solde = solde + NEW.montant
+--     WHERE id = NEW.client_destinataire_id
+--       AND NEW.type_operation_id =
+--       (SELECT id FROM types_operation WHERE nom='transfert');
+-- END;
 
 INSERT INTO operateurs (nom, pourcentage) VALUES ('Yas',10);
 INSERT INTO operateurs (nom, pourcentage) VALUES ('Orange',10);
